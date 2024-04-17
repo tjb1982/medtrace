@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+    <head>
+        <title>MEDTRACE: Case - Frontend Developer</title>
+        <script type="module" src="./build/MyCard.js"></script>
+        <!-- "light" DOM styles -->
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+            :root {
+                /* init the CSS var from the "light" DOM */
+                --my-card-header-color: red;
+            }
+            #cards {
+                padding: 20px;
+                display: grid;
+                grid-template-columns: repeat(auto-fill, 200px);
+                grid-gap: 1rem;
+                justify-content: space-between;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- the template for the custom component -->
+        <template id="my-card-template">
+            <!-- shadow DOM styles -->
+            <style>
+                :host {
+                    box-shadow: 0px 0px 5px #ccc;
+                    display: block;
+                    padding: 10px;
+                }
+                header {
+                    /* using the CSS var assigned from the "light" DOM; default
+                       green is never displayed because the var is initialized
+                       above. */
+                    color: var(--my-card-header-color, green);
+                }
+                #message {
+                    margin: 5px;
+                    padding: 10px;
+                    background-color: #eee;
+                }
+            </style>
+
+            <header class="">
+                <h1>
+                    <slot name="headline">
+                        Default headline
+                    </slot>
+                </h1>
+            </header>
+            <!-- this could have been a slot named "main" like
+                    `<slot name="main"></slot>`
+                 but that makes it harder to use in the HTML below. -->
+            <section id="main">
+                <slot></slot>
+            </section>
+            <div id="message"></div>
+        </template>
+
+        <!-- begin content -->
+        <section id="cards">
+            <my-card message="initial message parsed from HTML">
+                <span slot="headline">Custom headline</span>
+                <button id="my-button">click me</button>
+            </my-card>
+            <my-card>hello world</my-card>
+        </section>
+
+        <script>
+            const cards = document.getElementsByTagName("my-card");
+            const $myButton = document.getElementById("my-button");
+            $myButton.addEventListener("click", () => {
+                const msg = "button clicked";
+
+                for (const $card of cards) {
+                    $card.setAttribute(
+                        "message",
+                        $card.getAttribute("message") === msg
+                            ? ""
+                            : msg,
+                    );
+                }
+            });
+        </script>
+    </body>
+</html>
