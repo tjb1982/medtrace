@@ -3,9 +3,20 @@
     <head>
         <meta charset="utf-8"/>
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <meta name="theme-color" content="#1d1850"/>
 
         <title>MEDTRACE: Case - Frontend Developer</title>
-        <!-- <script type="module" src="./MyCard/MyCard.js"></script> -->
+
+        <!-- ability to import three.js from cdn -->
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+                    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+                }
+            }
+        </script>
+        
         <script type="module" src="./App/App.js"></script>
         <!-- "light" DOM styles -->
         <style>
