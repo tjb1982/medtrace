@@ -1,14 +1,3 @@
-/**
- * This could also be imported as a string or written here and attached to the
- * `document.body` as a `template` element, like
- * 
- *     const template = document.createElement("template");
- *     template.innerHTML = `<style>...</style><div>...</div>`;
- *     document.body.appendChild(template);
- * 
- * which would only be run here once, similar in performance to parsing it in
- * index.html file.
- */
 const template = document.getElementById("my-card-template") as
     HTMLTemplateElement;
 
@@ -16,7 +5,7 @@ enum Attributes {
     MESSAGE = "message",
 }
 
-window.customElements.define("my-card", class extends HTMLElement {
+export default class ECGTicker extends HTMLElement {
     static observedAttributes = [Attributes.MESSAGE];
 
     private _content: DocumentFragment;
@@ -46,4 +35,8 @@ window.customElements.define("my-card", class extends HTMLElement {
             this.$message.appendChild(document.createTextNode(curr));
         }
     }
-});
+};
+
+window.customElements.define("x-ecg-ticker", ECGTicker);
+
+export {};

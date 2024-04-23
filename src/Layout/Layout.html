@@ -1,0 +1,242 @@
+<template id="layout-template">
+    <style>
+        :host {
+            display: flex;
+            flex-direction: row;
+            align-content: baseline;
+            height: 100%;
+            color: var(--theme-ink-color);
+            flex-wrap: wrap;
+            --pj-layout-header-height: 2.5rem;
+            margin: auto;
+            min-height: 100vh;
+            min-height: calc(100vh - 55px);
+            --pj-layout-padding: 30px;
+            padding: 0;
+            width: 100%;    
+            --pj-layout-max-screen: 1366px;
+        }
+    
+        .padded {
+            transition: padding 200ms ease-in-out;
+            padding: var(--pj-layout-padding);
+        }
+        #header-wrapper {
+            width: 100%;
+            position: relative;
+            top: 0;
+            background: var(--theme-background-dark);
+            transition:
+                background 200ms ease-in-out,
+                box-shadow 200ms ease-in-out,
+                padding 200ms ease-in-out;
+        }
+        #header-wrapper.hidden {
+            z-index: 1;
+            position: sticky;
+            transform: translateY(-125px);
+        }
+        #header-wrapper.hidden-transition {
+            transition: all 150ms ease-in-out;
+        }
+        #header-wrapper.sticky {
+            box-shadow: 0 0 5px #aaa;
+            z-index: 1;
+            position: sticky;
+            background: var(--theme-background-top-bar);
+            transform: translateY(0px);
+            transition: transform 150ms ease-in-out;
+        }
+        #footer {
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            transition: all 150ms ease-in-out;
+        }
+        #footer.hidden {
+            box-shadow: 0 0 5px #aaa;
+            transform: translateY(75px);
+        }
+        #footer.hidden-transition {
+            transition: all 150ms ease-in-out;
+        }
+        #footer.sticky {
+            box-shadow: 0 0 5px #aaa;
+            transform: translateY(0px);
+            transition: transform 150ms ease-in-out;
+        }
+        #main-header {
+            display: flex;
+            z-index: 1;
+            flex-wrap: wrap;
+            line-height: 1.15rem;
+        }
+        #main-header h1 {
+            font-size: 1.15rem;
+            margin: 0;
+        }
+        .spacer {
+            flex-grow: 1; 
+            display: block;
+        }
+        .main-title {
+            display: block;
+            margin: 0 0 0 .5rem;
+            margin: 0;
+            width: 160px;
+            height: 43px;
+        }
+        #main-content {
+            overflow: auto;
+            width: 100vw;
+            min-height: inherit;
+        }
+        .drawer {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 80vw;
+            overflow: auto;
+            transition: transform 200ms cubic-bezier(1,0,0,1);
+            transition: all 200ms ease-in-out;
+        }
+        #left-drawer.open, #right-drawer.open {
+            transform: translateX(0);
+            z-index: 2;
+        }
+        #left-drawer {
+            left: 0;
+            background: rgba(90,90,90,.90);
+            transform: translateX(-100%);    
+            display: flex;
+            flex-wrap: wrap;
+            z-index: 1;
+        }
+        #right-drawer {
+            right: 0;
+            background: var(--theme-background-dark);
+            transform: translateX(100%);
+            z-index: 1;
+        }
+        .modal {
+            width: 100vw;
+            max-width: 100%;
+            transform: translateX(-100vw);
+            position: fixed;
+            overflow: hidden;
+            z-index: 1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(200,200,200,.10);
+            opacity: 0;
+        }
+        .modal.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        #loading-modal {
+            display: flex;
+            justify-content: center;
+            transition: opacity 1000ms ease-in;
+        }
+        #loading-modal svg {
+            max-width: 10em;
+        }
+        #context-menu {
+            display: flex;
+            justify-content: flex-end;
+            width: 55%;
+            max-width: 200px;
+            height: 35px;
+        }
+        #context-menu.hidden {
+            display: none;
+        }
+        .context-menu-spacer {
+            border-right: 1px dotted #ccc;
+            margin: 0 5px;
+        }
+    
+        @media screen
+            /* and (min-width: 500px) */
+            and (max-width: 500px) {
+            .padded {
+                padding: calc(var(--pj-layout-padding) / 2);
+            }
+        }
+    
+        /**
+        * Left hand side menu is now fixed in place and hamburger goes away.
+        */
+        @media screen
+            and (min-width: 500px) {
+    
+            :host {
+                /* min-width: 700px; */
+                max-width: var(--pj-layout-max-screen);
+            }
+            #main-content {
+                display: flex;
+                align-items: stretch;
+            }
+            slot[name="main"] {
+                width: 1%;
+                display: block;
+                flex-grow: 1;
+            }
+        }
+    
+        @media screen and (min-width: 1366px) {
+            #header-wrapper.sticky {
+                box-shadow: none;
+                z-index: auto;
+                position: initial;
+                background: inherit;
+                transform: translateY(0px);
+                transition: none;
+            }
+        }
+    
+        @media screen and (min-width: 700px) {
+            .drawer {
+                width: 30vw;
+                min-width: 300px;
+                max-width: 555px;
+            }
+        }
+    </style>
+    
+    <header id="header-wrapper" class="padded">
+        <div id="main-header">
+            <h1 class="main-title">
+                <slot name="main-title"></slot>
+            </h1>
+            <div class="spacer"></div>
+            <div id="context-menu">
+                <slot name="context-menu"></slot>
+            </div>
+        </div>
+    </header>
+    
+    <div class="modal" id="modal"></div>
+    <div class="modal" id="loading-modal">
+        <!-- SVG spinner -->
+    </div>
+    
+    <div class="drawer" id="left-drawer">
+        <slot name="left-drawer"></slot>
+    </div>
+    <div class="drawer" id="right-drawer">
+        <slot name="right-drawer"></slot>
+    </div>
+    
+    <main id="main-content" class="padded">
+        <slot name="main"></slot>
+    </main>
+    
+    <div id="footer" class="padded">
+        <slot name="footer"></slot>
+    </div>
+</template>

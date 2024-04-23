@@ -1,0 +1,46 @@
+<!-- the template for the custom component -->
+<template id="my-card-template">
+    <!-- shadow DOM styles -->
+    <style>
+        :host {
+            box-shadow: 0px 0px 5px var(--theme-primary-pale);
+            display: block;
+            padding: 0 20px 10px 20px;
+            transition: var(--base-transition);
+            font-family: sans-serif;
+            min-height: 222px;
+            /* border-radius: 3px; */
+        }
+        :host(:hover) {
+            box-shadow: 0px 0px 20px var(--theme-primary);
+        }
+        header {
+            /* using the CSS var assigned from the "light" DOM; default
+                green is never displayed because the var is initialized
+                above. */
+            color: var(--my-card-header-color, green);
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+        }
+        #message {
+            margin: 15px;
+        }
+    </style>
+
+    <header class="">
+        <h1>
+            <slot name="headline">
+                Default headline
+            </slot>
+        </h1>
+    </header>
+    <!-- this could have been a slot named "main" like
+            `<slot name="main"></slot>`
+            but that makes it harder to use in the HTML below. -->
+    <section id="main">
+        <slot></slot>
+    </section>
+    <div id="message"></div>
+</template>
